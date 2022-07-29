@@ -9,6 +9,8 @@
     <Authors>Brendon Santos</Authors>
     <Company>Nordiminas Solutions LTDA</Company>
     <Description>Biblioteca genérica para manipulação do Redis</Description>
+    <Title>Redis Generic Repository</Title>
+    <PackageProjectUrl>https://github.com/DonPSantos/RedisRepository</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
