@@ -11,6 +11,7 @@
     <Description>Biblioteca genérica para manipulação do Redis</Description>
     <Title>Redis Generic Repository</Title>
     <PackageProjectUrl>https://github.com/DonPSantos/RedisRepository</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DonPSantos/RedisRepository</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
