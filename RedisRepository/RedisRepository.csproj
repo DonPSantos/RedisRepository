@@ -5,10 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.0.2</Version>
+    <Version></Version>
     <Authors>Brendon Santos</Authors>
     <Company>Nordiminas Solutions LTDA</Company>
-    <Description>Biblioteca genérica para manipulação do Redis</Description>
+    <Description>Biblioteca genérica para manipulação do Redis implementada sobre o nuget StackExchange.Redis</Description>
     <Title>Redis Generic Repository</Title>
     <PackageProjectUrl>https://github.com/DonPSantos/RedisRepository</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DonPSantos/RedisRepository</RepositoryUrl>
