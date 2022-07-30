@@ -33,7 +33,7 @@ jobs:
       with:
         tag_name: $GITVERSION_SEMVER
       env:
-        GITHUB_TOKEN: ${{ secrets.NUGET_ORG_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
         
     - name: Build
       run: dotnet build -c Release -o out
