@@ -1,4 +1,4 @@
-name: .NET
+name: Build and deploy nuget
 
 on:
   push:
@@ -24,4 +24,4 @@ jobs:
     - name: Push
       run: |
         cd out
-        dotnet nuget push *.nupkg ${{ secrets.NUGET_TOKEN }} --source "https://nuget.pkg.github.com/DonPSantos/index.json" --skip-duplicate
+        dotnet nuget push *.nupkg ${{ secrets.NUGET_ORG_TOKEN }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
