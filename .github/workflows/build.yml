@@ -31,7 +31,7 @@ jobs:
     - name: Tag Repo
       uses: richardsimko/update-tag@v1
       with:
-        tag_name: $GITVERSION_SEMVER
+        tag_name: ${{ GITVERSION_SEMVER }}
       env:
         GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
         
