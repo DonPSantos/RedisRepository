@@ -2,9 +2,9 @@ name: dotnet-nuget
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 env:
   PATH_PROJECT: ./RedisRepository/RedisRepository.csproj
