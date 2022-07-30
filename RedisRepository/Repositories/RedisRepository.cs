@@ -17,10 +17,10 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Adiciona um objeto serializado como JSON
         /// </summary>
-        /// <typeparam name="TO"></typeparam>
-        /// <param name="hash"></param>
-        /// <param name="key"></param>
-        /// <param name="obj"></param>
+        /// <typeparam name="TO">Any</typeparam>
+        /// <param name="hash">Dictionary hash</param>
+        /// <param name="key">Dictionary key</param>
+        /// <param name="obj">Dictionary obj</param>
         public void SetWithJson<TO>(string hash, string key, TO obj)
         {
             HashEntry[] value = { new HashEntry(key, JsonSerializer.Serialize(obj)) };
@@ -31,10 +31,10 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Adiciona um objeto serializado como Array de bytes
         /// </summary>
-        /// <typeparam name="TO"></typeparam>
-        /// <param name="hash"></param>
-        /// <param name="key"></param>
-        /// <param name="obj"></param>
+        /// <typeparam name="TO">Any</typeparam>
+        /// <param name="hash">Dictionary hash</param>
+        /// <param name="key">Dictionary key</param>
+        /// <param name="obj">Dictionary obj</param>
         public void SetWithBytes<TO>(string hash, string key, TO obj)
         {
             HashEntry[] value = { new HashEntry(key, JsonSerializer.SerializeToUtf8Bytes(obj)) };
@@ -45,8 +45,8 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Obtém uma lista de chaves a partir de um hash
         /// </summary>
-        /// <param name="hash"></param>
-        /// <returns></returns>
+        /// <param name="hash">Dictionary hash</param>
+        /// <returns>All dictionary keys</returns>
         public string[] GetKeysByHash(string hash)
         {
             var result = _redisCache.HashKeys(hash);
@@ -59,9 +59,9 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Obtém um objeto <T> a partir do hash e da key
         /// </summary>
-        /// <param name="hash"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="hash">Dictionary hash</param>
+        /// <param name="key">Dictionary key</param>
+        /// <returns>A value field</returns>
         public T GetObject(string hash, string key)
         {
             var result = _redisCache.HashGet(hash, key);
@@ -74,8 +74,8 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Obtém todos os objetos a partir de um hash
         /// </summary>
-        /// <param name="hash"></param>
-        /// <returns></returns>
+        /// <param name="hash">Dictionary hash</param>
+        /// <returns>All values dictionary</returns>
         public IEnumerable<T> GetAllObjects(string hash)
         {
             return _redisCache.HashGetAll(hash).Select(x => JsonSerializer.Deserialize<T>(x.Value));
@@ -88,8 +88,8 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Adiciona um chave-valor string-string
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="obj"></param>
+        /// <param name="key">Field Key</param>
+        /// <param name="obj">Field Value</param>
         public void Set(string key, string obj)
         {
             _redisCache.StringSet(key, obj);
@@ -98,8 +98,8 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Adiciona um chave-valor string-int
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="obj"></param>
+        /// <param name="key">Field Key</param>
+        /// <param name="obj">Field Value</param>
         public void Set(string key, int obj)
         {
             _redisCache.StringSet(key, obj);
@@ -108,8 +108,8 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Adiciona um chave-valor string-byte[]
         /// </summary>
-        /// <param name="key">Chave</param>
-        /// <param name="obj">Array de bytes</param>
+        /// <param name="key">Field Key</param>
+        /// <param name="obj">Field Value</param>
         public void Set(string key, byte[] obj)
         {
             _redisCache.StringSet(key, obj);
@@ -118,8 +118,8 @@ namespace RedisRepository.Repositories
         /// <summary>
         /// Obtém um registro com base em uma chave
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">Field Key</param>
+        /// <returns>String of key-value</returns>
         public string Get(string key)
         {
             return _redisCache.StringGet(key);
