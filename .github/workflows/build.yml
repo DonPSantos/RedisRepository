@@ -1,4 +1,4 @@
-name: dotnet-nuget
+name: Build and deploy nuget
 
 on:
   push:
@@ -6,25 +6,31 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  PATH_PROJECT: ./RedisRepository/RedisRepository.csproj
-  NUGET_SERVER: https://api.nuget.org/v3/index.json
-
 jobs:
-  pack-push:
-
+  build:
+  
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
+          
     - name: Setup .NET 6
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x 
         
-    - name: Geração do package
-      run: dotnet pack ${{ env.PATH_PROJECT }} -c Release -o out
-    - name: Push no NuGet
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      with:
+        versionSpec: '5.x'
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.9.7
+        
+    - name: Build
+      run: dotnet build -c Release -o out
+    - name: Push
       run: |
         cd out
-        dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_ORG_TOKEN }} --source ${{ env.NUGET_SERVER }} --skip-duplicate
+        dotnet nuget push *.nupkg -k ${{ secrets.NUGET_ORG_TOKEN }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
