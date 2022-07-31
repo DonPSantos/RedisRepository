@@ -65,10 +65,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Display version
-        run: |
-          echo SemVer: $SEMVER
+
       - name: Create Release
-        run: gh release create v${{ env.SEMVER }} --generate-notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.NUGET_TOKEN }}"
+          automatic_release_tag: "v${{ env.SEMVER }}"
+          prerelease: false
+          files: |
+            LICENSE.txt
+            *.jar
