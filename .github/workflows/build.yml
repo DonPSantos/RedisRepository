@@ -36,7 +36,14 @@ jobs:
     - name: Determine Version
       id:   gitversion
       uses: gittools/actions/gitversion/execute@v0.9.7
-      
+            
+    - name: Tag Repo
+      uses: richardsimko/update-tag@v1
+      with:
+        tag_name: v${{ steps.gitversion.outputs.semVer }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
+        
     - name: Restore dependencies
       run:  dotnet restore
           
@@ -58,7 +65,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Display version
+        run: |
+          echo SemVer: $SEMVER
       - name: Create Release
-        run: gh release create v$SEMVER --generate-notes
+        run: gh release create v${{ env.SEMVER }} --generate-notes
         env:
           GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
