@@ -1,4 +1,4 @@
-﻿namespace RedisRepository.Repositories
+﻿namespace RedisRepository.Repositories.Interfaces
 {
     public interface IRedisRepository<T> where T : class
     {

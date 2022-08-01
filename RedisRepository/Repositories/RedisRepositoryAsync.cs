@@ -4,11 +4,11 @@ using System.Text.Json;
 
 namespace RedisRepository.Repositories
 {
-    public class RedisRepository<T> : IRedisRepository<T> where T : class
+    public class RedisRepositoryAsync<T> : IRedisRepositoryAsync<T> where T : class
     {
         private readonly IDatabase _redisCache;
 
-        public RedisRepository(IConnectionMultiplexer connection)
+        public RedisRepositoryAsync(IConnectionMultiplexer connection)
         {
             _redisCache = connection.GetDatabase() ?? throw new ArgumentNullException(nameof(connection));
         }
@@ -22,11 +22,11 @@ namespace RedisRepository.Repositories
         /// <param name="hash">Dictionary hash</param>
         /// <param name="key">Dictionary key</param>
         /// <param name="obj">Dictionary obj</param>
-        public void SetWithJson<TO>(string hash, string key, TO obj)
+        public async Task SetWithJsonAsync<TO>(string hash, string key, TO obj)
         {
             HashEntry[] value = { new HashEntry(key, JsonSerializer.Serialize(obj)) };
 
-            _redisCache.HashSet(hash, value);
+            await _redisCache.HashSetAsync(hash, value);
         }
 
         /// <summary>
@@ -36,11 +36,11 @@ namespace RedisRepository.Repositories
         /// <param name="hash">Dictionary hash</param>
         /// <param name="key">Dictionary key</param>
         /// <param name="obj">Dictionary obj</param>
-        public void SetWithBytes<TO>(string hash, string key, TO obj)
+        public async Task SetWithBytesAsync<TO>(string hash, string key, TO obj)
         {
             HashEntry[] value = { new HashEntry(key, JsonSerializer.SerializeToUtf8Bytes(obj)) };
 
-            _redisCache.HashSet(hash, value);
+            await _redisCache.HashSetAsync(hash, value);
         }
 
         /// <summary>
@@ -48,9 +48,9 @@ namespace RedisRepository.Repositories
         /// </summary>
         /// <param name="hash">Dictionary hash</param>
         /// <returns>All dictionary keys</returns>
-        public string[] GetKeysByHash(string hash)
+        public async Task<string[]> GetKeysByHashAsync(string hash)
         {
-            var result = _redisCache.HashKeys(hash);
+            var result = await _redisCache.HashKeysAsync(hash);
             if (result.Any())
                 return Array.ConvertAll(result, x => (string)x);
             else
@@ -63,9 +63,9 @@ namespace RedisRepository.Repositories
         /// <param name="hash">Dictionary hash</param>
         /// <param name="key">Dictionary key</param>
         /// <returns>A value field</returns>
-        public T GetObject(string hash, string key)
+        public async Task<T> GetObjectAsync(string hash, string key)
         {
-            var result = _redisCache.HashGet(hash, key);
+            var result = await _redisCache.HashGetAsync(hash, key);
             if (result.HasValue)
                 return JsonSerializer.Deserialize<T>(result);
             else
@@ -77,9 +77,9 @@ namespace RedisRepository.Repositories
         /// </summary>
         /// <param name="hash">Dictionary hash</param>
         /// <returns>All values dictionary</returns>
-        public IEnumerable<T> GetAllObjects(string hash)
+        public async Task<IEnumerable<T>> GetAllObjectsAsync(string hash)
         {
-            return _redisCache.HashGetAll(hash).Select(x => JsonSerializer.Deserialize<T>(x.Value));
+            return _redisCache.HashGetAllAsync(hash).Result.Select(x => JsonSerializer.Deserialize<T>(x.Value));
         }
 
         #endregion
@@ -91,9 +91,9 @@ namespace RedisRepository.Repositories
         /// </summary>
         /// <param name="key">Field Key</param>
         /// <param name="obj">Field Value</param>
-        public void Set(string key, string obj)
+        public async Task SetAsync(string key, string obj)
         {
-            _redisCache.StringSet(key, obj);
+            await _redisCache.StringSetAsync(key, obj);
         }
 
         /// <summary>
@@ -101,9 +101,9 @@ namespace RedisRepository.Repositories
         /// </summary>
         /// <param name="key">Field Key</param>
         /// <param name="obj">Field Value</param>
-        public void Set(string key, int obj)
+        public async Task SetAsync(string key, int obj)
         {
-            _redisCache.StringSet(key, obj);
+            await _redisCache.StringSetAsync(key, obj);
         }
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace RedisRepository.Repositories
         /// </summary>
         /// <param name="key">Field Key</param>
         /// <param name="obj">Field Value</param>
-        public void Set(string key, byte[] obj)
+        public async Task SetAsync(string key, byte[] obj)
         {
-            _redisCache.StringSet(key, obj);
+            await _redisCache.StringSetAsync(key, obj);
         }
 
         /// <summary>
@@ -121,9 +121,9 @@ namespace RedisRepository.Repositories
         /// </summary>
         /// <param name="key">Field Key</param>
         /// <returns>String of key-value</returns>
-        public string Get(string key)
+        public async Task<string> GetAsync(string key)
         {
-            return _redisCache.StringGet(key);
+            return await _redisCache.StringGetAsync(key);
         }
 
         #endregion
