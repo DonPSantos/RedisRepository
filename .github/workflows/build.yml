@@ -74,4 +74,4 @@ jobs:
           automatic_release_tag: "v${{ env.SEMVER }}"
           prerelease: false
           files: |
-            LICENSE.txt
+            LICENSE.txt 
