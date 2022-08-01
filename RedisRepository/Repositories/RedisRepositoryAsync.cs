@@ -79,7 +79,15 @@ namespace RedisRepository.Repositories
         /// <returns>All values dictionary</returns>
         public async Task<IEnumerable<T>> GetAllObjectsAsync(string hash)
         {
-            return _redisCache.HashGetAllAsync(hash).Result.Select(x => JsonSerializer.Deserialize<T>(x.Value));
+            if (!string.IsNullOrEmpty(hash))
+            {
+                var result = await _redisCache.HashGetAllAsync(hash);
+                if (result.Any())
+                    result.Select(x => JsonSerializer.Deserialize<T>(x.Value));
+                else
+                    Enumerable.Empty<T>();
+            }
+            return Enumerable.Empty<T>();
         }
 
         #endregion
@@ -123,7 +131,12 @@ namespace RedisRepository.Repositories
         /// <returns>String of key-value</returns>
         public async Task<string> GetAsync(string key)
         {
-            return await _redisCache.StringGetAsync(key);
+            if (!string.IsNullOrEmpty(key))
+            {
+                return await _redisCache.StringGetAsync(key);
+
+            }else
+                return string.Empty;
         }
 
         #endregion

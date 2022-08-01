@@ -50,11 +50,17 @@ namespace RedisRepository.Repositories
         /// <returns>All dictionary keys</returns>
         public string[] GetKeysByHash(string hash)
         {
-            var result = _redisCache.HashKeys(hash);
-            if (result.Any())
-                return Array.ConvertAll(result, x => (string)x);
+            if (!string.IsNullOrEmpty(hash))
+            {
+                var result = _redisCache.HashKeys(hash);
+
+                if (result.Any())
+                    return Array.ConvertAll(result, x => (string)x);
+                else
+                    return Array.Empty<string>();
+            }
             else
-                return null;
+                return Array.Empty<string>();
         }
 
         /// <summary>
@@ -79,7 +85,13 @@ namespace RedisRepository.Repositories
         /// <returns>All values dictionary</returns>
         public IEnumerable<T> GetAllObjects(string hash)
         {
-            return _redisCache.HashGetAll(hash).Select(x => JsonSerializer.Deserialize<T>(x.Value));
+            if (!string.IsNullOrEmpty(hash))
+            {
+                var result = _redisCache.HashGetAll(hash);
+
+                return result.Any() ? result.Select(x => JsonSerializer.Deserialize<T>(x.Value)): Enumerable.Empty<T>();
+            }else
+                return Enumerable.Empty<T>();
         }
 
         #endregion
