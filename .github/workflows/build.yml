@@ -36,10 +36,10 @@ jobs:
         github_token: ${{ secrets.NUGET_TOKEN }}
           
     - name: Build dotnet 
-      run: dotnet build RedisRepository.sln --configuration release /p:Version=${{ steps.tag_version.outputs.new_tag }} /p:AssemblyVersion=${{ steps.tag_version.outputs.new_tag }} --no-restore
+      run: dotnet build RedisRepository.sln --configuration release /p:Version=${{ steps.tag_version.outputs.new_version }} /p:AssemblyVersion=${{ steps.tag_version.outputs.new_version }} --no-restore
       
     - name: Package nuget
-      run: dotnet pack RedisRepository.sln --configuration release -o:package /p:PackageVersion=${{ steps.tag_version.outputs.new_tag }}
+      run: dotnet pack RedisRepository.sln --configuration release -o:package /p:PackageVersion=${{ steps.tag_version.outputs.new_version }}
 
     - name: Push generated package to GitHub registry
       run: dotnet nuget push ./package/*.nupkg  -k ${{ secrets.NUGET_ORG_TOKEN }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
