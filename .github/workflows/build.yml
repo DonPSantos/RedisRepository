@@ -32,8 +32,7 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_UNUGET_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_UNUGET_SECRET }}
+        role-to-assume: arn:aws:iam::464613464354:role/role-codeartifact-adm
         aws-region: us-east-1
         # role-duration-seconds: 1200
         # role-to-assume: arn:aws:iam::464613464354:role/role-codeartifact-adm
