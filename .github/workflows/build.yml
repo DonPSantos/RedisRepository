@@ -33,6 +33,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::464613464354:role/role-codeartifact-adm
+        role-external-id: 123456789
         aws-region: us-east-1
         # role-duration-seconds: 1200
         # role-to-assume: arn:aws:iam::464613464354:role/role-codeartifact-adm
