@@ -35,10 +35,12 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_UNUGET_ID }}
         aws-secret-access-key: ${{ secrets.AWS_UNUGET_SECRET }}
         aws-region: us-east-1
-        role-duration-seconds: 1200
-        role-to-assume: arn:aws:iam::464613464354:role/role-codeartifact-adm
-        role-external-id: 123456789
+        # role-duration-seconds: 1200
+        # role-to-assume: arn:aws:iam::464613464354:role/role-codeartifact-adm
+        # role-external-id: 123456789
       
+    - run: echo "AUTH_TOKEN= $(aws codeartifact get-authorization-token --domain donpsantos --domain-owner 464613464354 --query authorizationToken --output text)" >> $GITHUB_ENV
+
     - name: Bump version and push tag
       id: tag_version
       uses: mathieudutour/github-tag-action@v6.0
@@ -52,7 +54,7 @@ jobs:
       run: dotnet pack RedisRepository.sln --configuration release -o:package /p:PackageVersion=${{ steps.tag_version.outputs.new_version }}
 
     - name: Push generated package to GitHub registry
-      run: dotnet nuget push ./package/*.nupkg --source "https://donpsantos-464613464354.d.codeartifact.us-east-1.amazonaws.com/nuget/nuget-repo/v3/index.json" --skip-duplicate
+      run: dotnet nuget push ./package/*.nupkg -k {{ env.AUTH_TOKEN }} --source "https://donpsantos-464613464354.d.codeartifact.us-east-1.amazonaws.com/nuget/nuget-repo/v3/index.json" --skip-duplicate
 
     - name: Create a GitHub release
       uses: ncipollo/release-action@v1
