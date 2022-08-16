@@ -3,7 +3,6 @@ name: Build and deploy nuget
 on:
   push:
     branches: [ master ]
-
 env:
   PROJECT_PATH: 'RedisRepository/RedisRepository.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output
@@ -11,10 +10,14 @@ env:
 
 jobs:
   build:
-  
+
     runs-on: ubuntu-latest
     outputs:
       semVer: ${{ steps.gitversion.outputs.semVer }} # To use an output in another job, you have to map it to a job output.
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
     - uses: actions/checkout@v2
@@ -32,12 +35,9 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::464613464354:role/role-codeartifact-adm
-        role-external-id: 123456789
+        role-to-assume: arn:aws:iam::464613464354:role/role-identity-provider-github
+        role-session-name: nugetsession
         aws-region: us-east-1
-        # role-duration-seconds: 1200
-        # role-to-assume: arn:aws:iam::464613464354:role/role-codeartifact-adm
-        # role-external-id: 123456789
       
     - run: echo "AUTH_TOKEN= $(aws codeartifact get-authorization-token --domain donpsantos --domain-owner 464613464354 --query authorizationToken --output text)" >> $GITHUB_ENV
 
