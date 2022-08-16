@@ -56,7 +56,7 @@ jobs:
     
     - name: Push generated package to GitHub registry
       run: |
-       dotnet nuget add source https://donpsantos-464613464354.d.codeartifact.us-east-1.amazonaws.com/nuget/nuget-repo/v3/index.json --name codeartifact --password ${{ env.AUTH_TOKEN }} --username donpsantos
+       dotnet nuget add source https://donpsantos-464613464354.d.codeartifact.us-east-1.amazonaws.com/nuget/nuget-repo/v3/index.json --name codeartifact --password ${{ env.AUTH_TOKEN }} --store-password-in-clear-text --username donpsantos
 
        dotnet nuget push ./package/*.nupkg --source "codeartifact" --skip-duplicate
 
