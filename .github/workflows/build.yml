@@ -3,18 +3,15 @@ name: Build and deploy nuget
 on:
   push:
     branches: [ master ]
+
 env:
   PROJECT_PATH: 'RedisRepository/RedisRepository.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
-permissions:
-  id-token: write
-  contents: read
-  
 jobs:
   build:
-
+  
     runs-on: ubuntu-latest
     outputs:
       semVer: ${{ steps.gitversion.outputs.semVer }} # To use an output in another job, you have to map it to a job output.
@@ -31,16 +28,7 @@ jobs:
 
     - name: Restore dependencies
       run:  dotnet restore
-    
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: arn:aws:iam::464613464354:role/role-identity-provider-github
-        role-session-name: nugetsession
-        aws-region: us-east-1
       
-    - run: echo "AUTH_TOKEN= $(aws codeartifact get-authorization-token --domain donpsantos --domain-owner 464613464354 --query authorizationToken --output text)" >> $GITHUB_ENV
-
     - name: Bump version and push tag
       id: tag_version
       uses: mathieudutour/github-tag-action@v6.0
@@ -53,12 +41,8 @@ jobs:
     - name: Package nuget
       run: dotnet pack RedisRepository.sln --configuration release -o:package /p:PackageVersion=${{ steps.tag_version.outputs.new_version }}
 
-    
     - name: Push generated package to GitHub registry
-      run: |
-       dotnet nuget add source https://donpsantos-464613464354.d.codeartifact.us-east-1.amazonaws.com/nuget/nuget-repo/v3/index.json --name codeartifact --password ${{ env.AUTH_TOKEN }} --store-password-in-clear-text --username donpsantos
-
-       dotnet nuget push ./package/*.nupkg --source "codeartifact" --skip-duplicate
+      run: dotnet nuget push ./package/*.nupkg  -k ${{ secrets.NUGET_ORG_TOKEN }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
 
     - name: Create a GitHub release
       uses: ncipollo/release-action@v1
