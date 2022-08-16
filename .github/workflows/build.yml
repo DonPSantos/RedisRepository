@@ -8,16 +8,16 @@ env:
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   build:
 
     runs-on: ubuntu-latest
     outputs:
       semVer: ${{ steps.gitversion.outputs.semVer }} # To use an output in another job, you have to map it to a job output.
-
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
     - uses: actions/checkout@v2
