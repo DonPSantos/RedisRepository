@@ -90,7 +90,7 @@ namespace RedisRepository.Repositories
             return Enumerable.Empty<T>();
         }
 
-        #endregion
+        #endregion Métodos com hash
 
         #region Métodos simples
 
@@ -134,11 +134,11 @@ namespace RedisRepository.Repositories
             if (!string.IsNullOrEmpty(key))
             {
                 return await _redisCache.StringGetAsync(key);
-
-            }else
+            }
+            else
                 return string.Empty;
         }
 
-        #endregion
+        #endregion Métodos simples
     }
 }

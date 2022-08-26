@@ -5,20 +5,27 @@
         #region Contratos hash
 
         public void SetWithJson<TO>(string hash, string key, TO obj);
+
         public void SetWithBytes<TO>(string hash, string key, TO obj);
+
         string[] GetKeysByHash(string hashKey);
+
         public T GetObject(string hash, string key);
+
         public IEnumerable<T> GetAllObjects(string hash);
 
-        #endregion
+        #endregion Contratos hash
 
         #region Contratos simples
 
         public void Set(string key, string obj);
+
         public void Set(string key, int obj);
+
         public void Set(string key, byte[] obj);
+
         public string Get(string key);
 
-        #endregion
+        #endregion Contratos simples
     }
 }
